@@ -7,11 +7,12 @@ import (
 	"os"
 	"users/driver"
 
-	"github.com/gorilla/mux"
-	"github.com/subosito/gotenv"
 	userHandler "users/user/handler"
 	userRepo "users/user/repo"
 	userUseCase "users/user/usecase"
+
+	"github.com/gorilla/mux"
+	"github.com/subosito/gotenv"
 )
 
 func init() {

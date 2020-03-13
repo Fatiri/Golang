@@ -27,5 +27,4 @@ func main() {
 	b[0] = "ngok"
 	fmt.Println(a, b)
 	fmt.Println(names)
-
 }

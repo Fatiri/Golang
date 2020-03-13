@@ -45,7 +45,7 @@ func (u UserRepoImpl) GetById(id int) (*model.User, error) {
 	//Menerima error saat melakukan query .Error
 	err := u.db.First(&data, id).Error
 	if err != nil {
-		return nil, fmt.Errorf("[UserRepoImpl.GetById] Get error when get user by id %w\n", err)
+		return nil, fmt.Errorf("[UserRepoImpl.GetById] Got error when get user by id %w\n", err)
 	}
 	return &data, nil
 }

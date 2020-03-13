@@ -32,7 +32,7 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 }
 
 func main() {
-	Crawl("https://golang.org/", 4, fetcher)
+	Crawl("https://facebook.com/", 4, fetcher)
 }
 
 // fakeFetcher adalah Fetcher yang mengembalikan hasil dari tampungan.

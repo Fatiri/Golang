@@ -28,15 +28,21 @@ func main() {
 	// for {
 
 	// }
+	fmt.Println("")
+	length := 8
 
-	length := 4
+	for i := 0; i < 4; i++ {
+		for i := 0; i < length; i++ {
+			for j := length - i; j > 1; j-- {
+				fmt.Print(" ")
+			}
 
-	for i := 1; i < length-1; i-- {
-		for j := i; j < length; j++ {
-			fmt.Print("*")
+			for j := 0; j <= i; j++ {
+				fmt.Print("* ")
+			}
+
+			fmt.Println("")
 		}
-
-		fmt.Println("")
 	}
 
 }

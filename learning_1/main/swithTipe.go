@@ -17,6 +17,7 @@ func main() {
 	do(21)
 	do("hello")
 	do(true)
+
 }
 
 // Penggunaan switch untuk tipe

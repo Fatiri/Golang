@@ -21,7 +21,7 @@ func Scale(v *Vertex, f float64) {
 func main() {
 	v := Vertex{3, 4}
 	Scale(&v, 10)
-	fmt.Println(Abs(v))
+	fmt.Println(v.Abs())
 }
 
 // Di sini kita lihat method Abs dan Scale dibuat ulang sebagai fungsi.

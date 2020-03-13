@@ -9,6 +9,7 @@ type Vertex struct {
 	X, Y float64
 }
 
+//penggunaan receiver di gunakan untuk penanda kalo si methode ini punyanya si struct vertex , shingga lewat vertex bisa akses methode abs
 func (v Vertex) Abs() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y)
 }

@@ -3,18 +3,21 @@ package main
 import "fmt"
 
 type Vertex struct {
-	Lat, Long float64
+	string, int string
 }
 
 var m = map[string]Vertex{
 	"ilham fatiri": Vertex{
-		40.927383, -83.8932683,
+		"jaka", "joko",
 	},
 	"Google": Vertex{
-		50.838743, -70.89800,
+		"juku", "jiki",
 	},
 }
 
+var n = map[string]int{"jaka": 2, "joko": 3}
+
 func main() {
-	fmt.Println(m["Google"])
+	fmt.Println(m)
+	fmt.Println(n)
 }

@@ -3,8 +3,8 @@ package main
 import "fmt"
 
 const (
-	Big   = 1 << 100
-	Small = Big >> 99
+	Big   = 200
+	Small = 2
 )
 
 func needInt(x int) int {
@@ -21,3 +21,13 @@ func main() {
 	fmt.Println(needFloat(Big))
 	// fmt.Println(needInt(Big))   = ini akan mencapai batas value nilai int
 }
+
+// Numeric Constants
+
+// Numeric constants are high-precision values.
+
+// An untyped constant takes the type needed by its context.
+
+// Try printing needInt(Big) too.
+
+// (An int can store at maximum a 64-bit integer, and sometimes less.)

@@ -3,11 +3,12 @@ package main
 import "fmt"
 
 func main() {
-	ch := make(chan int, 2)
-	ch <- 1
-	ch <- 2
-	fmt.Println(<-ch)
-	fmt.Println(<-ch)
+	ch := make(chan int, 100)
+	for i := 0; i < 5; i++ {
+		ch <- 1 + 1
+		fmt.Println(<-ch)
+	}
+
 }
 
 // Kanal dengan buffer

@@ -9,7 +9,6 @@ import (
 	"users/model"
 	"users/user"
 	"users/utils"
-
 )
 
 type UserHandler struct {
@@ -122,6 +121,15 @@ func (h UserHandler) updateUserById(writer http.ResponseWriter, request *http.Re
 	utils.HandleSuccess(writer, http.StatusOK, data)
 }
 
+func (u UserHandler) writeDataToCsv(writer http.ResponseWriter, request *http.Request) {
+	err = utils.PrepareDataAndReturnCsv()
+	if err != nil {
+		fmt.Printf("[Utils.writeDataToCsv] Got error when export data to csv %v\n", err)
+		utils.HandleError(writer, "Ops... something wrong", http.StatusBadRequest)
+	}
+	utils.HandleSuccess(writer, http.StatusAccepted, nil)
+}
+
 func CreateUserHandler(res *mux.Router, userUseCase user.UserUseCase) {
 	userHandler := UserHandler{userUseCase}
 	res.HandleFunc("/user", userHandler.register).Methods(http.MethodPost)
@@ -129,4 +137,5 @@ func CreateUserHandler(res *mux.Router, userUseCase user.UserUseCase) {
 	res.HandleFunc("/users", userHandler.getAllDataUser).Methods(http.MethodGet)
 	res.HandleFunc("/user/{id}", userHandler.deleteUserById).Methods(http.MethodDelete)
 	res.HandleFunc("/user/{id}", userHandler.updateUserById).Methods(http.MethodPut)
+	res.HandleFunc("/export", userHandler.writeDataToCsv).Methods(http.MethodGet)
 }

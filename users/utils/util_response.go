@@ -1,20 +1,22 @@
 package utils
 
 import (
+	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"encoding/json"
+	"os"
 	"users/model"
 )
 
-func HandleSuccess(writer http.ResponseWriter, status int, data interface{}){
+func HandleSuccess(writer http.ResponseWriter, status int, data interface{}) {
 	result := model.Response{
-		Status: true,
+		Status:  true,
 		Message: "success",
-		Data: data,
+		Data:    data,
 	}
-    
-	writer.Header().Set("Content-type","aplication/json")
+
+	writer.Header().Set("Content-type", "aplication/json")
 	writer.WriteHeader(status)
 	error := json.NewEncoder(writer).Encode(result)
 	if error != nil {
@@ -25,14 +27,14 @@ func HandleSuccess(writer http.ResponseWriter, status int, data interface{}){
 	}
 }
 
-func HandleError(writer http.ResponseWriter, message string, status int)  {
+func HandleError(writer http.ResponseWriter, message string, status int) {
 	result := model.Response{
-		Status: false,
+		Status:  false,
 		Message: message,
-		Data: nil,
+		Data:    nil,
 	}
 
-	writer.Header().Set("Content-type","application/json")
+	writer.Header().Set("Content-type", "application/json")
 	writer.WriteHeader(status)
 	error := json.NewEncoder(writer).Encode(result)
 	if error != nil {
@@ -43,4 +45,25 @@ func HandleError(writer http.ResponseWriter, message string, status int)  {
 		return
 	}
 
+}
+
+var datas = [][]string{{"jaka1", "jaka2"}, {"jajang1", "jajang2"}}
+
+func PrepareDataAndReturnCsv() {
+
+	file, err := os.Create("/resultttttt.csv")
+	if err != nil {
+		fmt.Printf("[main] Got error when create file csf")
+	}
+
+	writer := csv.NewWriter(file)
+
+	defer writer.Flush()
+
+	for _, value := range datas {
+		err := writer.Write(value)
+		if err != nil {
+			fmt.Println("Ops.. something wrong")
+		}
+	}
 }
