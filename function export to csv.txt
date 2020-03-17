@@ -1,0 +1,31 @@
+func PrepareDataAndReturnCsv(data *[]model.User, w http.ResponseWriter, request *http.Request) error {
+
+	headers := []string{
+		"email",
+		"name",
+		"user_name",
+		"password",
+	}
+	
+	wr := csv.NewWriter(w)
+	wr.Write(headers)
+	for _, value := range *data {
+		for i := 0; i < 1; i++ {
+			record := []string{}
+			record = append(record, value.Name)
+			record = append(record, value.UserName)
+			record = append(record, value.Password)
+			record = append(record, value.Email)
+			err := wr.Write(record)
+			if err != nil {
+				http.Error(w, "Error sending csv: "+err.Error(), http.StatusInternalServerError)
+				return nil
+			}
+		}
+		w.Header().Set("Content-Type", "text/csv")
+		w.Header().Set("Content-Disposition", "attachment;filename=TheCSVFileName.csv")
+	}
+	wr.Flush()
+
+	return nil
+}
