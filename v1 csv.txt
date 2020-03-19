@@ -1,0 +1,139 @@
+dateLayout := "02-Jan-2006 15:04"
+
+	switch reportName {
+	case "stt_detail":
+		headers := []string{
+			"stt_id", "stt_date", "period", "external_id", "booking_id", "client_name", "client_code", "customer_branch_name",
+			"origin", "destination", "fwd_area_destination", "product", "commodity", "pcs", "last_status", "volume_weight",
+			"gross_weight", "chargeable_weight", "surcharge_rate_heavy_weight", "surcharge_rate_commodity", "discount_to_pos",
+			"publish_rate", "publish_rate_cost", "forward_rate", "cod_amount", "value_of_goods", "surcharge_rate", "shipping_surcharge",
+			"insurance", "wood_packing_fee", "document_surcharge", "good_tax", "total_amount_rate", "total_vat", "cod_commision", "cod_revenue",
+			"vat_cod_revenue", "shipping_surcharge_discount_to_pos", "total_discount_to_pos", "trucking_fee", "paid_datetime", "handling_fee", "paid_datetime",
+			"paid_amount", "truck_number", "delivery_by_bartner",
+		}
+
+		wr := csv.NewWriter(w)
+		wr.Write(headers)
+		for _, item := range data.([]*models.SttDetailExcel) {
+			for i := 0; i < 1; i++ {
+				record := []string{}
+
+				//convert float to string
+				var volumeWeight, grossWeight, chargeableWeight, surchargeRateHeavyWeight float64 = item.VolumeWeight, item.GrossWeight, item.ChargeableWeight, item.SurchargeRateHeavyWeight
+				var surchargeRateCommodity, discountToPost, publicRatecost, forwardRate float64 = item.SurchargeRateCommodity, item.DiscountToPos, item.PublishRate, item.ForwardRate
+				var codAmount, valueofGods, surchargeRate, shipingSurcharge, insurance float64 = item.CodAmount, item.ValueOfGoods, item.SurchargeRate, item.ShippingSurcharge, item.Insurance
+				var woodPackingFee, documentSurcharge, goodTax, totalAmountRate, totalVat float64 = item.WoodPackingFee, item.DocumentSurcharge, item.GoodTax, item.TotalAmountRate, item.TotalVat
+				var codCommision, codRevenue, vatCodRevenue, shippingSurchargeDiscountToPos float64 = item.CodCommision, item.CodRevenue, item.VatCodRevenue, item.ShippingSurchargeDiscountToPos
+				var totalDiscountToPos, truckingFee, handlingFee, paidAmount float64 = item.TotalDiscountToPos, item.TruckingFee, item.HandlingFee, item.PaidAmount
+
+				volumeWeightStr := fmt.Sprintf("%.2f", volumeWeight)
+				grossWeightstr := fmt.Sprintf("%.2f", grossWeight)
+				chargeableWeightStr := fmt.Sprintf("%.2f", chargeableWeight)
+				surchargeRateHeavyWeightStr := fmt.Sprintf("%.2f", surchargeRateHeavyWeight)
+				surchargeRateCommodityStr := fmt.Sprintf("%.2f", surchargeRateCommodity)
+				discountToPostStr := fmt.Sprintf("%.2f", discountToPost)
+				publicRatecostStr := fmt.Sprintf("%.2f", publicRatecost)
+				forwardRateStr := fmt.Sprintf("%.2f", forwardRate)
+				codAmountStr := fmt.Sprintf("%.2f", codAmount)
+				valueofGodsStr := fmt.Sprintf("%.2f", valueofGods)
+				surchargeRateStr := fmt.Sprintf("%.2f", surchargeRate)
+				shipingSurchargeStr := fmt.Sprintf("%.2f", shipingSurcharge)
+				insuranceStr := fmt.Sprintf("%.2f", insurance)
+				woodPackingFeeStr := fmt.Sprintf("%.2f", woodPackingFee)
+				documentSurchargeStr := fmt.Sprintf("%.2f", documentSurcharge)
+				goodTaxStr := fmt.Sprintf("%.2f", goodTax)
+				totalAmountRateStr := fmt.Sprintf("%.2f", totalAmountRate)
+				totalVatStr := fmt.Sprintf("%.2f", totalVat)
+				codCommisionStr := fmt.Sprintf("%.2f", codCommision)
+				codRevenueStr := fmt.Sprintf("%.2f", codRevenue)
+				vatCodRevenueStr := fmt.Sprintf("%.2f", vatCodRevenue)
+				shippingSurchargeDiscountToPosStr := fmt.Sprintf("%.2f", shippingSurchargeDiscountToPos)
+				totalDiscountToPosStr := fmt.Sprintf("%.2f", totalDiscountToPos)
+				truckingFeeStr := fmt.Sprintf("%.2f", truckingFee)
+				handlingFeeStr := fmt.Sprintf("%.2f", handlingFee)
+				paidAmountStr := fmt.Sprintf("%.2f", paidAmount)
+
+				sttDateStr := ""
+				if item.SttDate != nil {
+					sttDateStr = item.SttDate.Add(time.Hour * 7).Format(dateLayout)
+				}
+				paidDateTimeStr := ""
+				if item.PaidDatetime != nil {
+					paidAmountStr = item.PaidDatetime.Add(time.Hour * 7).Format(dateLayout)
+				}
+
+				record = append(
+					record, item.SttID, sttDateStr, item.Period, item.ExternalID, item.BookingID, item.ClientName, item.ClientCode,
+					item.CustomerBranchName, item.Origin, item.Destination, item.FwdAreaDestination, item.Product, item.Commodity, strconv.Itoa(item.Pcs),
+					item.LastStatus, volumeWeightStr, grossWeightstr, chargeableWeightStr, surchargeRateHeavyWeightStr, surchargeRateCommodityStr, discountToPostStr,
+					publicRatecostStr, forwardRateStr, codAmountStr, valueofGodsStr, surchargeRateStr, shipingSurchargeStr, insuranceStr, woodPackingFeeStr, documentSurchargeStr,
+					goodTaxStr, totalAmountRateStr, totalVatStr, codCommisionStr, codRevenueStr, vatCodRevenueStr, shippingSurchargeDiscountToPosStr, totalDiscountToPosStr,
+					truckingFeeStr, paidDateTimeStr, handlingFeeStr, paidAmountStr, item.TruckNumber, item.DeliveryByPartner,
+				)
+				err := wr.Write(record)
+				if err != nil {
+					http.Error(w, "Error sending csv: "+err.Error(), http.StatusInternalServerError)
+				}
+			}
+			w.Header().Set("Content-Type", "text/csv")
+			w.Header().Set("Content-Disposition", "attachment;filename=stt_detail.csv")
+		}
+		wr.Flush()
+		w.Header().Del("Content-Type")
+	case "stt_report":
+		headers := []string{
+			"stt_id", "stt_date", "external_id", "booking_id", "booked_by", "customer_brach_name", "fwd_area_origin", "origin",
+			"destination", "fwd_area_destination", "product", "pcs", "commodity", "last_status", "delivery_by", "shipping_name", "shipping_address",
+			"shipping_phone", "consignee_name", "consignee_address", "consignee_phone", "client_name", "client_code", "truck_number", "awb_id", "flight_no",
+			"awb_date_time", "starting_point", "starting_status", "end_point", "delivery_fee_percentage", "delivery_by_partner", "ppr",
+			"sla", "sla_corporate", "period", "created_at", "created_by", "updated_at", "updated_by",
+		}
+
+		wr := csv.NewWriter(w)
+		wr.Write(headers)
+		for _, item := range data.([]*models.SttReport) {
+			for i := 0; i < 1; i++ {
+				record := []string{}
+
+				sttDateStr := ""
+				if item.SttDate != nil {
+					sttDateStr = item.SttDate.Add(time.Hour * 7).Format(dateLayout)
+				}
+				awmDateTimeStr := ""
+				if item.AwbDatetime != nil {
+					awmDateTimeStr = item.AwbDatetime.Add(time.Hour * 7).Format(dateLayout)
+				}
+				startingPointStr := ""
+				if item.StartingPoint != nil {
+					startingPointStr = item.StartingPoint.Add(time.Hour * 7).Format(dateLayout)
+				}
+				endPointStr := ""
+				if item.EndPoint != nil {
+					endPointStr = item.EndPoint.Add(time.Hour * 7).Format(dateLayout)
+				}
+				createAtStr := ""
+				if item.CreatedAt != nil {
+					createAtStr = item.CreatedAt.Add(time.Hour * 7).Format(dateLayout)
+				}
+				updateAtStr := ""
+				if item.UpdatedAt != nil {
+					updateAtStr = item.UpdatedAt.Add(time.Hour * 7).Format(dateLayout)
+				}
+
+				record = append(
+					record, item.SttID, sttDateStr, item.ExternalID, item.BookingID, item.BookedBy, item.CustomerBranchName,
+					item.FwdAreaOrigin, item.Origin, item.Destination, item.FwdAreaDestination, item.Product, strconv.Itoa(item.Pcs), item.Commodity, item.LastStatus,
+					item.DeliveryBy, item.ShippingName, item.ShippingAddress, item.ShippingPhone, item.ConsigneeName, item.ConsigneeAddress, item.ConsigneePhone, item.ClientName,
+					item.ClientCode, item.TruckNumber, item.AwbID, item.FlightNo, awmDateTimeStr, startingPointStr, item.StartingStatus, endPointStr,
+					strconv.Itoa(item.DeliveryFeePercentage), item.DeliveryByPartner, strconv.Itoa(item.Ppr), item.Sla, item.SlaCorporate, item.Period, createAtStr,
+					item.CreatedBy, updateAtStr, item.UpdatedBy,
+				)
+				err := wr.Write(record)
+				if err != nil {
+					http.Error(w, "Error sending csv: "+err.Error(), http.StatusInternalServerError)
+				}
+			}
+			w.Header().Set("Content-Type", "text/csv")
+			w.Header().Set("Content-Disposition", "attachment;filename=stt_report.csv")
+		}
+		wr.Flush()
